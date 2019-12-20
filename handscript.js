@@ -1,6 +1,9 @@
 console.log("hi tf");
-import{MnistData} from './data.js';
 
+
+//import {MnistData} from './data.js';
+
+ 
 async function showExamples(data){
 
 //creating container in the visor
@@ -30,10 +33,10 @@ async function showExamples(data){
     const canvas=document.createElement('canvas');
     canvas.height=28;
     canvas.width=28;
-    canvas.style='margin:4px';
+    canvas.style='margin:4px;';
 //tf.browser.toPixels draws a tf.tensor of pixel values to byte array
 //appendChild method appends the node as a last child of a node
-    await tf.browser.toPixels(imagetensor,canvas);
+await tf.browser.toPixels(imageTensor, canvas);
     surface.drawArea.appendChild(canvas);
 
     imageTensor.dispose();
@@ -52,3 +55,4 @@ document.addEventListener('DOMContentLoaded', run);
 *there are no style sheets blocking js execution.
 *Document Content Object is an API for HTML and XML docs
 *It defines the logical structure of docs*/
+

@@ -36,12 +36,11 @@ const MNIST_LABELS_PATH =
  * NOTE: This will get much easier. For now, we do data fetching and
  * manipulation manually.
  */
-export class MnistData {
-  constructor() {
-/**this keyword refers to an current object which is executing the current bit of js */
-    this.shuffledTrainIndex = 0;
-    this.shuffledTestIndex = 0;
-  }
+ /*export*/class MnistData {
+    constructor() {
+      this.shuffledTrainIndex = 0;
+      this.shuffledTestIndex = 0;
+    }
 
   async load() {
 // Make a request for the MNIST sprited image.
@@ -62,7 +61,10 @@ export class MnistData {
         img.onload = () => {
         img.width = img.naturalWidth;
         img.height = img.naturalHeight;
-
+/*An ARRAY BUFFER object is used to represent fixed-length raw binary data buffer.
+*the contents of an array buffer cannot be directly manipulated
+*can only be accessed through dataview object.These objects can be
+*used to read and write the contents of the buffer.*/
         const datasetBytesBuffer =
             new ArrayBuffer(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4);
 /*chunksize is the number of rows to be read into a dataframe
