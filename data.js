@@ -18,12 +18,18 @@
 *Convolutional Neural Network is a type of artificial neural n/w
 *used in image recognition and proccessing ,that is specifically designed to process pixel data*/
 
+//the size of an image(w=28,h=28)28x28=784
 const IMAGE_SIZE = 784;
 const NUM_CLASSES = 10;
 const NUM_DATASET_ELEMENTS = 65000;
 
 const NUM_TRAIN_ELEMENTS = 55000;
 const NUM_TEST_ELEMENTS = NUM_DATASET_ELEMENTS - NUM_TRAIN_ELEMENTS;
+
+//path to the image and labels
+/*image sprite is a collection of images put it into a single image
+*a webpage with many images can take long time to load
+*and generates multiple server requests,image sprites reduces the number of server request.*/
 
 const MNIST_IMAGES_SPRITE_PATH =
     'https://storage.googleapis.com/learnjs-data/model-builder/mnist_images.png';
@@ -36,21 +42,29 @@ const MNIST_LABELS_PATH =
  * NOTE: This will get much easier. For now, we do data fetching and
  * manipulation manually.
  */
- /*export*/class MnistData {
+ /*export*/ class MnistData {
     constructor() {
       this.shuffledTrainIndex = 0;
       this.shuffledTestIndex = 0;
     }
 
+//load() responsible for asynchronously loading the image and label data
   async load() {
 // Make a request for the MNIST sprited image.
 
     const img = new Image();
+
+    //canvas() is a DOM element that provides easy access to pixel arrays
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
 
 /*getContext method returns an object that provides methods and properties for drawing on canvas
 *getContext(2d) is used to draw lines,boxes and more*/
+
+//the code makes new promise that will be resolved once the image loaded successfully
+/*crossOrigin is an img attribute that allows for the loading 
+*images across domains, and gets around CORS (cross-origin resource sharing) issues
+*when interacting with the DOM.*/
 
     const imgRequest = new Promise((resolve, reject) => {
       img.crossOrigin = '';
@@ -59,14 +73,22 @@ const MNIST_LABELS_PATH =
 *and loads the proper version of webpage based on information*/
 
         img.onload = () => {
+
+/*natural width and height refers to the original dimensions of the loaded image,
+*and makes sure that the image size is correct when performing calculations*/
+
         img.width = img.naturalWidth;
         img.height = img.naturalHeight;
+
 /*An ARRAY BUFFER object is used to represent fixed-length raw binary data buffer.
 *the contents of an array buffer cannot be directly manipulated
 *can only be accessed through dataview object.These objects can be
 *used to read and write the contents of the buffer.*/
+//new buffer is like a container that holds every pixel of an image.
         const datasetBytesBuffer =
-            new ArrayBuffer(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4);
+            new ArrayBuffer(NUM_DATASET_ELEMENTS * IMAGE_SIZE * 4);//4 represents number of channels
+
+
 /*chunksize is the number of rows to be read into a dataframe
 * at any time inorder to fit into the local memory*/
 
@@ -88,6 +110,8 @@ const MNIST_LABELS_PATH =
 
           const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
+//below code loops through every image in the sprite and intializes new array for that iterations
+
           for (let j = 0; j < imageData.data.length / 4; j++) {
 
 // All channels hold an equal value since the image is grayscale, so
@@ -96,11 +120,14 @@ const MNIST_LABELS_PATH =
             datasetBytesView[j] = imageData.data[j * 4] / 255;
           }
         }
+
+//below line takes the buffer and recasts into new array that holds our pixel data and resolves our promise.
         this.datasetImages = new Float32Array(datasetBytesBuffer);
 
         resolve();
       };
       img.src = MNIST_IMAGES_SPRITE_PATH;
+      //this line begins loading the image, which starts the function.
     });
 
     const labelsRequest = fetch(MNIST_LABELS_PATH);
